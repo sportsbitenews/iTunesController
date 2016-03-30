@@ -1,0 +1,25 @@
+{
+  "name": "itunes-cmd",
+  "version": "1.0.0",
+  "description": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "node index.js"
+  },
+  "keywords": [
+    "itunes",
+    "powershell",
+    "windows"
+  ],
+  "author": "Khalil Stemmler",
+  "license": "ISC",
+  "dependencies": {
+    "chalk": "^1.1.1",
+    "edge": "^5.0.0",
+    "edge-ps": "0.1.0-pre",
+    "node-powershell": "^1.1.0"
+  },
+  "bin": {
+    "itunes": "index.js"
+  }
+}
