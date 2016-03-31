@@ -4,6 +4,12 @@ var chalk = require('chalk');
 var Shell = require('node-powershell');
 
 // ========================================================== //
+// ================== Setup XML iTunes File =================== //
+// ========================================================== //
+
+var db = require('./db.js');
+
+// ========================================================== //
 // ================== iTunes Controller ===================== //
 // ========================================================== //
 
@@ -70,6 +76,9 @@ var iTunesController = function() {
 		    console.log(chalk.green("Paused '" + result[0] + "' by " + result[1] + " at " + time['m'] + ":" + time['s']));
 		});
 	}
+	this.refresh = function(){
+		db.refresh();
+	}
 };
 
 // ========================================================== //
@@ -94,6 +103,9 @@ switch(process.argv[2]){
 	case "next":
 		control.nextTrack();
 		break;
+	case "refresh":
+		control.refresh();
+		break;
 }
 
 function secondsToTime(secs) {
@@ -113,8 +125,6 @@ function secondsToTime(secs) {
     };
     return obj;
 }
-
-
 
 
 

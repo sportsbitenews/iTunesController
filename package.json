@@ -17,7 +17,9 @@
     "chalk": "^1.1.1",
     "edge": "^5.0.0",
     "edge-ps": "0.1.0-pre",
-    "node-powershell": "^1.1.0"
+    "itunes-library-stream": "0.0.0",
+    "node-powershell": "^1.1.0",
+    "userhome": "^1.0.0"
   },
   "bin": {
     "itunes": "index.js"
