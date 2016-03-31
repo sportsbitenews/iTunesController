@@ -21,7 +21,7 @@ var createTableSQL = "CREATE TABLE ITUNES_LIBRARY (" +
         "LOCATION TEXT); ";
 
 // ================================================= //
-// ============== SELECT ALL FROM TABLE ===================== //
+// ============== SELECT ALL FROM TABLE ============ //
 // ================================================= //
 
 var selectAllSQL = "SELECT * FROM ITUNES_LIBRARY; ";
