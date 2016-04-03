@@ -11,7 +11,6 @@ var sqlite3 = require("sqlite3").verbose();
 
 var db = new sqlite3.Database(file);
 
-
 // ================================================ //
 // ============== CREATE TABLE ===================== //
 // ================================================= //
@@ -64,6 +63,15 @@ var insertTrackSQL = "INSERT INTO ITUNES_LIBRARY (TRACK_ID, TITLE, ARTIST, ALBUM
 
 var DatabaseController = function(){}
 
+  /**
+    * INSERT a new entry to Chat_Messages
+    * @param {Integer} senderUserId
+    * @param {Integer} playlistId
+    * @param {String} messageText
+    *
+    * @return {} chatMessage
+    */
+
 DatabaseController.prototype.createTable = function(){
     db.run(createTableSQL);
     console.log("Created table");
@@ -80,6 +88,48 @@ DatabaseController.prototype.selectAll = function(){
       });
     });
     console.log("Ran Select All");
+}
+
+/**
+    * GET all songs by Artist Name
+    * @param {String} artistName
+    * @param {Function} callback
+    *
+    * @return {} rows - all songs that match the query
+    */
+
+DatabaseController.prototype.selectByArtistName = function(artistName, callback){
+    db.all("SELECT * FROM ITUNES_LIBRARY WHERE ARTIST = ? ", artistName, function(err, rows) {
+        callback(rows);
+    });
+}
+
+/**
+    * GET a song by TrackID
+    * @param {Integer} trackId
+    * @param {Function} callback
+    *
+    * @return {} track - the track that has the corresponding TRACK_ID
+    */
+
+DatabaseController.prototype.selectByTrackID = function(trackID, callback){
+    db.each("SELECT * FROM ITUNES_LIBRARY WHERE TRACK_ID = ? ", trackID, function(err, track) {
+        callback(track);
+    });
+}
+
+/**
+    * SEARCH for a song by track text
+    * @param {String} search
+    * @param {Function} callback
+    *
+    * @return {} queryResults - all query results that have the matching text
+    */
+
+DatabaseController.prototype.findSongByTitle = function(search, callback){
+    db.all("SELECT * FROM ITUNES_LIBRARY WHERE TITLE LIKE ? ", '%' + search + '%', function(err, queryResults) {
+          callback(queryResults);
+    });
 }
 
 DatabaseController.prototype.refresh = function(){
