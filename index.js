@@ -4,33 +4,33 @@ var chalk = require('chalk');
 var Shell = require('node-powershell');
 
 // ========================================================== //
-// ================== Setup XML iTunes File =================== //
+// ================== Setup XML iTunes File ================= //
 // ========================================================== //
 
 var db = require('./db.js');
 
 // ========================================================== //
 // ================== iTunes Controller ===================== //
-// =========================================================== //
+// ========================================================== //
 
 
 var iTunesController = function() {
-	this.start = function() {
-		var iTunes_start = edge.func('ps', function () {/*
-			$iTunes = New-Object -ComObject iTunes.Application
-		*/
-		});
-		console.log(chalk.blue('Starting iTunes...'));
-		iTunes_start('Node.js', function (error, result) {
-		    if (error) throw error;
-		});
-	}
+    this.start = function() {
+        var iTunes_start = edge.func('ps', function () {/*
+        $iTunes = New-Object -ComObject iTunes.Application
+        */
+    });
+        console.log(chalk.blue('Starting iTunes...'));
+    iTunes_start('Node.js', function (error, result) {
+        if (error) throw error;
+        });
+    }
 	this.restartTrack = function(){
 		var iTunes_restart = edge.func('ps', function(){/*
 			$iTunes = New-Object -ComObject iTunes.Application
 			$iTunes.BackTrack()
 			$iTunes.CurrentTrack.Name, $iTunes.CurrentTrack.Artist
-		*/
+		    */
 		});
 		iTunes_restart('Node.js', function (error, result) {
 		    if (error) throw error;
@@ -38,22 +38,22 @@ var iTunesController = function() {
 		});
 	}
 	this.nextTrack = function(){
-		var iTunes_restart = edge.func('ps', function(){/*
+        var iTunes_restart = edge.func('ps', function(){/*
 			$iTunes = New-Object -ComObject iTunes.Application
 			$iTunes.NextTrack()
 			$iTunes.CurrentTrack.Name, $iTunes.CurrentTrack.Artist
 		*/
-		});
-		iTunes_restart('Node.js', function (error, result) {
+        });
+        iTunes_restart('Node.js', function (error, result) {
 		    if (error) throw error;
-		    console.log(chalk.green("Playing '" + result[0] + "' by " + result[1]));
+            console.log(chalk.green("Playing '" + result[0] + "' by " + result[1]));
 		});
 	}
-	this.play = function(){
-		var iTunes_play = edge.func('ps', function(){/*
-				$iTunes = New-Object -ComObject iTunes.Application
-				$iTunes.Play()
-				$iTunes.CurrentTrack.Name, $iTunes.CurrentTrack.Artist
+    this.play = function(){
+        var iTunes_play = edge.func('ps', function(){/*
+            $iTunes = New-Object -ComObject iTunes.Application
+            $iTunes.Play()
+            $iTunes.CurrentTrack.Name, $iTunes.CurrentTrack.Artist
 		*/
 		});
 		iTunes_play('Node.js', function (error, result) {
@@ -63,22 +63,22 @@ var iTunesController = function() {
 	}
 	this.pause = function(){
 		var iTunes_pause = edge.func('ps', function(){/*
-				$iTunes = New-Object -ComObject iTunes.Application
-				$iTunes.Pause()
-				$iTunes.CurrentTrack.Name, $iTunes.CurrentTrack.Artist, $iTunes.PlayerPosition
-		*/
+            $iTunes = New-Object -ComObject iTunes.Application
+            $iTunes.Pause()
+            $iTunes.CurrentTrack.Name, $iTunes.CurrentTrack.Artist, $iTunes.PlayerPosition
+        */
 		});
-		iTunes_pause('Node.js', function (error, result) {
-		    if (error) throw error;
-
-		    var time = secondsToTime(result[2]);
-
-		    console.log(chalk.green("Paused '" + result[0] + "' by " + result[1] + " at " + time['m'] + ":" + time['s']));
+        iTunes_pause('Node.js', function (error, result) {
+            if (error) throw error;
+            
+            var time = secondsToTime(result[2]);
+            
+            console.log(chalk.green("Paused '" + result[0] + "' by " + result[1] + " at " + time['m'] + ":" + time['s']));
 		});
 	}
 	this.refresh = function(){
-		db.refresh();
-	}
+        db.refresh();
+    }
 };
 
 // ========================================================= //
