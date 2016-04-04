@@ -17,24 +17,28 @@ Until I have a stable release, you can play around with this just by running:
 
 ####Open Itunes
 `itunes start`
-######Opens iTunes. iTunes needs to be open to run commands. All commands automatically open iTunes if closed.
+
+Opens iTunes. iTunes needs to be open to run commands. All commands automatically open iTunes if closed.
 
 ####Play Song
 `itunes play [optional song name]`
-######Resumes current song if stopped.
-######If optional song name is specified, it will search for a song matching the song name entered. If multiple matching entries are found, it will prompt the user to choose from a list.
+
+Resumes current song if stopped. If optional song name is specified, it will search for a song matching the song name entered. If multiple matching entries are found, it will prompt the user to choose from a list.
 
 ####Restart Song From Beginning
 `itunes restart`
-######Plays song from start.
+
+Plays song from start.
 
 ####Play Next Song
 `itunes next`
-######Skips to the next song.
+
+Skips to the next song.
 
 ####Pause Current Song
 `itunes pause`
-######Halts playback of the current song.
+
+Halts playback of the current song.
 
 Notice:
 - Still a little buggy but it definitely works! Working on deterministic setup commands as getting setup is the hardest part.
