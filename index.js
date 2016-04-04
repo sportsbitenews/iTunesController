@@ -16,7 +16,7 @@ var db = require('./db.js');
 
 var iTunesController = function() {
     
-    // Private Methods
+    // ============ Private Methods =====================
     
     function replaceAll(str, find, replace) {
         return str.replace(new RegExp(find, 'g'), replace);
@@ -40,7 +40,7 @@ var iTunesController = function() {
         });
     }
     
-    // Public Methods
+    // ============ Public Methods ======================
     
     this.start = function() {
         var iTunes_start = edge.func('ps', function () {/*
@@ -106,6 +106,10 @@ var iTunesController = function() {
 	this.refresh = function(){
         db.refresh();
     }
+    
+    this.setup = function(){
+        db.createTable();
+    }
 
     this.searchSong = function() {
         // Build search query
@@ -127,15 +131,14 @@ var iTunesController = function() {
                 }
                 
                 // Wait for user's response.
-                console.log("");
                 var songSelection = readlineSync.question('Which song # you want to play [Enter #]: ');
-                
-                if(!isNaN(songSelection)){
+                console.log(songSelection);
+                if((!isNaN(songSelection)) && (songSelection != "") && (songSelection <= result.length) && (songSelection >= 0)) {
                     // Play selected track
                     console.log("");
                     playTrackFromLocation(result[songSelection].LOCATION, result[songSelection].TITLE, result[songSelection].ARTIST);
                 } else {
-                    console.log("invalid input");
+                    console.log(chalk.red("No valid song # selected"));
                 }
             }
         });
@@ -153,7 +156,11 @@ switch(process.argv[2]){
 		control.start();
 		break;
 	case "play":
-		control.play();
+        if(process.argv.length > 3){
+            control.searchSong();
+        } else {
+            control.play();
+        }
 		break;
 	case "pause":
 		control.pause();
@@ -167,8 +174,8 @@ switch(process.argv[2]){
 	case "refresh":
 		control.refresh();
 		break;
-    case "song":
-		control.searchSong();
+    case "setup":
+		control.setup();
 		break;
 }
 
@@ -189,17 +196,3 @@ function secondsToTime(secs) {
     };
     return obj;
 }
-
-
-
-/* 
-  Cool Stuff:
-
-  Node-Powershell: https://www.npmjs.com/package/node-powershell
-  Invoking Command Line Arguments: http://stackoverflow.com/questions/4351521/how-do-i-pass-command-line-arguments-to-node-js
-  Windows Tools: https://github.com/coreybutler/node-windows
-  Look into spawning child processes and listening to stdout commands: http://stackoverflow.com/questions/10179114/execute-powershell-script-from-node-js
-  iTunes Powershell Functions: http://www.thomasmaurer.ch/projects/powershell-itunes/
-  Original idea for this: https://github.com/mrkev/spotify-terminal
-
-*/

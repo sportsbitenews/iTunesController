@@ -1,5 +1,6 @@
 
 var itunes = require('itunes-library-stream');
+var chalk = require('chalk');
 var userhome = require('userhome');
 var path = require('path');
 var fs = require('fs');
@@ -28,12 +29,15 @@ var createTableSQL = "CREATE TABLE ITUNES_LIBRARY (" +
 
 var selectAllSQL = "SELECT * FROM ITUNES_LIBRARY; ";
 
-// ================================================= //
-// ============== INSERT INTO TABLE ===================== //
-// ================================================= //
+/**
+    * INSERT INTO Itunes Library Table
+    * @param {Array} array of Statements Objects
+    * @param {Function} callback
+    *
+    * @return void 
+    */
 
 function insertTrack(insertStatementsArray){
-    console.log("Updating database...");
     // Begin a transaction. 
     db.serialize(function () {
         db.exec('begin transaction'); 
@@ -47,10 +51,10 @@ function insertTrack(insertStatementsArray){
         }
         
         Promise.all(request).then(function(values){
-            console.log("now we're here");
-            
+            // Commit the transaction
             db.exec('COMMIT')
             .close(function(){
+                console.log(chalk.green("Added " + insertStatementsArray.length + " new songs..."));
                 console.log("Happy Panda :-) Database updated with all your music.");
             });
             
@@ -64,12 +68,8 @@ var insertTrackSQL = "INSERT INTO ITUNES_LIBRARY (TRACK_ID, TITLE, ARTIST, ALBUM
 var DatabaseController = function(){}
 
   /**
-    * INSERT a new entry to Chat_Messages
-    * @param {Integer} senderUserId
-    * @param {Integer} playlistId
-    * @param {String} messageText
-    *
-    * @return {} chatMessage
+    * CREATE a New Table 
+    * @return void 
     */
 
 DatabaseController.prototype.createTable = function(){
@@ -77,17 +77,28 @@ DatabaseController.prototype.createTable = function(){
     console.log("Created table");
 }
 
+  /**
+    * CLOSE the database connection
+    * @return void 
+    */
+
 DatabaseController.prototype.closeDB = function(){
     db.close();
 }
 
-DatabaseController.prototype.selectAll = function(){
+  /**
+    * SELECT ALL 
+    * @param {Function} callback
+    *
+    * @return {} rows - all songs in iTunes Library
+    */
+
+DatabaseController.prototype.selectAll = function(callback){
     db.serialize(function() {    
-      db.each(selectAllSQL, function(err, row) {
-          console.log(row.TRACK_ID + " - " + row.TITLE + " - " + row.ARTIST);
+      db.all(selectAllSQL, function(err, rows) {
+          callback(rows);
       });
     });
-    console.log("Ran Select All");
 }
 
 /**
@@ -132,7 +143,14 @@ DatabaseController.prototype.findSongByTitle = function(search, callback){
     });
 }
 
+/**
+    * UPDATE the database with any songs inside ItunesLibary.xml but not in database
+    *
+    * @return void
+    */
+
 DatabaseController.prototype.refresh = function(){
+    console.log(chalk.yellow("Looking for songs..."));
     var stream = fs.createReadStream(location)
       .pipe(itunes.createTrackStream());
 
@@ -143,28 +161,38 @@ DatabaseController.prototype.refresh = function(){
 
     stream.on('data', function(data) {
         var trackID = data['Track ID'];
-        var name = data.Name;
-        var artist = data.Artist;
-        var album = data.Album;
-        var location = data.Location;
+        
+        // Check if the song is in the database or not
+        db.all("SELECT * FROM ITUNES_LIBRARY WHERE TRACK_ID = ? ", trackID, function(err, row){
+            
+            // If the song doesn't exist, add it to be inserted
+            if(row[0]){
+            if(!row[0].TRACK_ID){
+                var name = data.Name;
+                var artist = data.Artist;
+                var album = data.Album;
+                var location = data.Location;
 
-        if(name) name.split('(').join('');
-        if(name) name.split(')').join('');
+                if(name) name.split('(').join('');
+                if(name) name.split(')').join('');
 
-        if(artist) artist.split('()').join('');
-        if(artist) artist.split(')').join('');
+                if(artist) artist.split('()').join('');
+                if(artist) artist.split(')').join('');
 
-        // Add object to insert to an array
-        inserts[index] = {
-            c1: trackID,
-            c2: name || '-----',
-            c3: artist || '-----',
-            c4: album || '-----',
-            c5: location
+                // Add object to insert to an array
+                inserts[index] = {
+                    c1: trackID,
+                    c2: name || '-----',
+                    c3: artist || '-----',
+                    c4: album || '-----',
+                    c5: location
+                }
+                console.log(data['Track ID'] + " - " + data.Name + " - " + data.Artist);
+                index++;
+            }
         }
-        console.log(data['Track ID'] + " - " + data.Name + " - " + data.Artist);
-        index++;
-      });
+        });
+    });
 
     stream.on('end', function(){
         index = 0;
@@ -173,12 +201,3 @@ DatabaseController.prototype.refresh = function(){
 }
 
 module.exports = new DatabaseController;
-    
-
-//db.serialize(function() {
-//    
-//  db.each("SELECT * FROM ITUNES_LIBRARY WHERE ARTIST = 'Cyanide Canaries'; ", function(err, row) {
-//      console.log(row.TRACK_ID + " - " + row.TITLE + " - " + row.ARTIST);
-//  });
-//});
-
