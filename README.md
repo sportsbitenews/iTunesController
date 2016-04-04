@@ -1,7 +1,7 @@
 # iTunesController
 Control iTunes from cmd line!
 
-Kind of a pointless project but pretty cool to mess around with Powershell. Works using Powershell called via the [Edge.js](https://github.com/tjanczuk/edge) project by @tjanczuk
+Kind of a pointless project but pretty cool to mess around with Powershell. Works using Sqlite3 and Powershell called via the [Edge.js](https://github.com/tjanczuk/edge) project by @tjanczuk
 ##### There's a reason why they call it POWERshell.
 
 ![longon](https://cloud.githubusercontent.com/assets/6892666/14238589/03b32ae6-fa01-11e5-9b9c-2038fd5fd1a6.gif)
