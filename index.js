@@ -135,7 +135,7 @@ var iTunesController = function() {
                     console.log("");
                     playTrackFromLocation(result[songSelection].LOCATION, result[songSelection].TITLE, result[songSelection].ARTIST);
                 } else {
-                    console.log("invalid input");
+                    console.log(chalk.red("No valid song # selected"));
                 }
             }
         });
@@ -153,7 +153,11 @@ switch(process.argv[2]){
 		control.start();
 		break;
 	case "play":
-		control.play();
+        if(process.argv.length > 3){
+            control.searchSong();
+        } else {
+            control.play();
+        }
 		break;
 	case "pause":
 		control.pause();
