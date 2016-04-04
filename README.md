@@ -4,6 +4,13 @@ Control iTunes from cmd line!
 Kind of a pointless project but pretty cool to mess around with Powershell. Works using Powershell called via the [Edge.js](https://github.com/tjanczuk/edge) project by @tjanczuk
 ##### There's a reason why they call it POWERshell.
 
+###Install
+Requires Node and NPM.
+Until I have a stable release, you can play around with this just by running:
+`npm install -g` in root directory of the project.
+
+- This makes use of a sqlite3 database which needs to be initialized. I haven't yet setup the initialization commands but you're welcome to play around with it and create the populated ITUNES_LIBRARY table manually until I've found the time to make it easy for you to do so.
+
 ###Command List [so far]
 
 ####Open Itunes
